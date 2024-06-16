@@ -1,0 +1,529 @@
+rhyme@ip-10-199-43-98:~$ mongo
+MongoDB shell version v4.4.1
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("9c6cc871-31d2-4f5f-806d-9da67562b9ad") }
+MongoDB server version: 4.4.1
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	https://docs.mongodb.com/
+Questions? Try the MongoDB Developer Community Forums
+	https://community.mongodb.com
+---
+The server generated these startup warnings when booting: 
+        2024-06-14T14:39:44.600+00:00: ***** SERVER RESTARTED *****
+        2024-06-14T14:39:44.895+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+        2024-06-14T14:39:46.017+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use admin
+switched to db admin
+> show collections
+system.version
+> db.system.version.find()
+{ "_id" : "featureCompatibilityVersion", "version" : "4.4" }
+> db.system.version.count()
+1
+> db
+admin
+> use myFirstDatabase
+switched to db myFirstDatabase
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db.createCollection("myFirstCollection")
+{ "ok" : 1 }
+> show dbs
+admin            0.000GB
+config           0.000GB
+local            0.000GB
+myFirstDatabase  0.000GB
+> show collections
+myFirstCollection
+
+> db
+myFirstDatabase
+> db.dropDatabase()
+{ "dropped" : "myFirstDatabase", "ok" : 1 }
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use blog
+switched to db blog
+> db.posts.insert({
+...   title: 'MongoDB rules',
+...   body: 'My first MongoDB document',
+...   date: ISODate('2020-09-01T18:30Z'),
+...   tags: ['mongodb','databases'],
+...   likes:2,
+...   author: {
+...     name: 'Ruwan',
+...     surname: 'Pathirana'
+...   },
+...   location: {
+...     type: 'point',
+...     coordinates: [6.93, 79.85]
+...   }
+... })
+WriteResult({ "nInserted" : 1 })
+> 
+> db.posts.find()
+{ "_id" : ObjectId("666d2aed587b0e5a7302a3a2"), "title" : "MongoDB rules", "body" : "My first MongoDB document", "date" : ISODate("2020-09-01T18:30:00Z"), "tags" : [ "mongodb", "databases" ], "likes" : 2, "author" : { "name" : "Ruwan", "surname" : "Pathirana" }, "location" : { "type" : "point", "coordinates" : [ 6.93, 79.85 ] } }
+> db.posts.find().pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+
+> db.posts.insert({
+... likes: 5,
+... title: 'Second Post',
+... author: {
+...   name: 'Jane',
+...   surname: 'Austen'
+... },
+... body: 'Body of my second post',
+... date: ISODate('2021-08-25T03:00:00Z')
+... })
+WriteResult({ "nInserted" : 1 })
+
+> db.posts.find().pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+
+> db.posts.find({title: 'Second Post'}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+> db.posts.find().sort({title: 1}).pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+> db.posts.find().sort({title: -1}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+> db.posts.find().sort({likes: {$gt: 2}}}).pretty()
+uncaught exception: SyntaxError: missing ) after argument list :
+@(shell):1:38
+> db.posts.find({likes: {$gt: 2}}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+> db.posts.find({likes: {$gte: 2}}).pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+> db.posts.find({likes: {$gte: 2}}).sort({likes: -1}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z")
+}
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	}
+}
+> $eq    $neq   //equal    //not equal
+uncaught exception: SyntaxError: unexpected token: identifier :
+@(shell):1:7
+
+> db.posts.update(
+... {
+...   title: 'Second Post'
+... },
+... {
+...   $set: {
+...     tags: ['tag1'],
+...     location:{
+...       type: 'Point',
+...       coordinates: [7.3, 80.64]
+...      }
+...   }
+...  }
+... )
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.posts.find({title: 'Second Post'}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z"),
+	"location" : {
+		"type" : "Point",
+		"coordinates" : [
+			7.3,
+			80.64
+		]
+	},
+	"tags" : [
+		"tag1"
+	]
+}
+> db.posts.update(
+... {
+...   title: 'Second Post'
+... },
+... {
+...   $unset: {
+...     tags: ''
+...   }
+... }
+... )
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> 
+> db.posts.find({title: 'Second Post'}).pretty()
+{
+	"_id" : ObjectId("666d2ea6587b0e5a7302a3a3"),
+	"likes" : 5,
+	"title" : "Second Post",
+	"author" : {
+		"name" : "Jane",
+		"surname" : "Austen"
+	},
+	"body" : "Body of my second post",
+	"date" : ISODate("2021-08-25T03:00:00Z"),
+	"location" : {
+		"type" : "Point",
+		"coordinates" : [
+			7.3,
+			80.64
+		]
+	}
+}
+
+
+/// Insert multiple documents at once
+
+> db.posts.insertMany(
+... [
+...   {
+...     title: 'Awsome Post',
+...     body: 'Body of Awesome Post',
+...     date: ISODate('2022-11-02T04:30:00Z')
+...   },
+...   {
+...     title: 'Awesome Post',
+...     body: 'Body of Awesome Post numer 2',
+...     likes: 3,
+...     date: ISODate('2024-03-08T17:25:00Z'),
+...     location: {
+...       type: 'Point',
+...       coordinates: [6.03, 80.21]
+...     }
+...   }
+... ]
+... )
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("666e8729fda9fed7cd68ac5d"),
+		ObjectId("666e8729fda9fed7cd68ac5e")
+	]
+}
+
+
+
+> db.posts.update(
+...   {},
+...   {
+...     $set:{
+...       published: false
+...     }
+...   }
+... )
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.posts.find(
+...   {
+...     published: {
+...       $exist: true
+...     }
+...   }
+... ).pretty()
+Error: error: {
+	"ok" : 0,
+	"errmsg" : "unknown operator: $exist",
+	"code" : 2,
+	"codeName" : "BadValue"
+}
+> db.posts.find(   {     published: {       $exists: true     }   } ).pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	},
+	"published" : false
+}
+> db.posts.find(   {     published: {       $exists: true     }   } ).pretty()
+{
+	"_id" : ObjectId("666d2aed587b0e5a7302a3a2"),
+	"title" : "MongoDB rules",
+	"body" : "My first MongoDB document",
+	"date" : ISODate("2020-09-01T18:30:00Z"),
+	"tags" : [
+		"mongodb",
+		"databases"
+	],
+	"likes" : 2,
+	"author" : {
+		"name" : "Ruwan",
+		"surname" : "Pathirana"
+	},
+	"location" : {
+		"type" : "point",
+		"coordinates" : [
+			6.93,
+			79.85
+		]
+	},
+	"published" : false
+}
+> db.posts.update(   {},   {     $set:{       published: false     }   } ,{multi:true})\
+uncaught exception: SyntaxError: invalid escape sequence :
+@(shell):1:85
+> db.posts.update(   {},   {     $set:{       published: false     }   } ,{multi:true})
+WriteResult({ "nMatched" : 4, "nUpserted" : 0, "nModified" : 3 })
+
+
+
+> db.posts.find({title: 'Awesome Post'})
+{ "_id" : ObjectId("666e8729fda9fed7cd68ac5e"), "title" : "Awesome Post", "body" : "Body of Awesome Post numer 2", "likes" : 3, "date" : ISODate("2024-03-08T17:25:00Z"), "location" : { "type" : "Point", "coordinates" : [ 6.03, 80.21 ] }, "published" : false }
+> 
+> 
+> db.posts.find(
+...   {
+...     $and: [
+...     {
+...      title: 'Awesome Post'
+...     },
+...     {
+...      likes: {
+...        $exists:true
+...      }
+...     }
+...     ]
+...   }
+... )
+{ "_id" : ObjectId("666e8729fda9fed7cd68ac5e"), "title" : "Awesome Post", "body" : "Body of Awesome Post numer 2", "likes" : 3, "date" : ISODate("2024-03-08T17:25:00Z"), "location" : { "type" : "Point", "coordinates" : [ 6.03, 80.21 ] }, "published" : false }
+> 
+
+
+>exit
+bye
+
