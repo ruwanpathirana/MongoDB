@@ -1,4 +1,4 @@
-rhyme@ip-10-199-43-98:~$ mongo
+ip######:~$ mongo
 MongoDB shell version v4.4.1
 connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
 Implicit session: session { "id" : UUID("9c6cc871-31d2-4f5f-806d-9da67562b9ad") }
